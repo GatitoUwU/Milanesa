@@ -1,0 +1,6 @@
+name: Milanesa
+version: '${project.version}'
+main: es.vytale.milanesa.spigot.Milanesa
+authors: [ gatogamer ]
+description: Núcleo principal del servidor, versión para Spigot
+website: https://vytale.es
