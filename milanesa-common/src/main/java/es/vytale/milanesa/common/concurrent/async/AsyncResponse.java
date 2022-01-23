@@ -2,6 +2,7 @@ package es.vytale.milanesa.common.concurrent.async;
 
 import es.vytale.milanesa.common.concurrent.callback.Callback;
 import es.vytale.milanesa.common.concurrent.response.Response;
+import es.vytale.milanesa.common.executor.NekoExecutor;
 
 /**
  * This code has been created by
@@ -11,7 +12,5 @@ import es.vytale.milanesa.common.concurrent.response.Response;
  * give me the credits. Arigato! n.n
  */
 public interface AsyncResponse<T>{
-
-    void addCallback(Callback<Response<T>> callback);
-
+    void addCallback(Callback<Response<T>> callback, NekoExecutor nekoExecutor);
 }

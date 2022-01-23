@@ -1,6 +1,9 @@
 package es.vytale.milanesa.common.redis;
 
+import es.vytale.milanesa.common.redis.credentials.MilanesaRedisCredentials;
+import lombok.Getter;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
 
 /**
  * This code has been created by
@@ -9,10 +12,16 @@ import redis.clients.jedis.JedisPool;
  * don't remove this messages and
  * give me the credits. Arigato! n.n
  */
+@Getter
 public class RedisHandler {
+    private final MilanesaRedisCredentials creds;
+    private final JedisPool jedisPool;
 
-    private JedisPool jedisPool;
+    public RedisHandler(MilanesaRedisCredentials creds) {
+        this.creds = creds;
+        JedisPoolConfig jpc = new JedisPoolConfig();
+        jpc.setMaxTotal(creds.getPoolSize());
 
-    public RedisHandler()
-
+        jedisPool = new JedisPool(jpc, creds.getHost(), creds.getPort(), creds.getTimeout(), creds.isAuthentication() ? creds.getPassword() : null);
+    }
 }

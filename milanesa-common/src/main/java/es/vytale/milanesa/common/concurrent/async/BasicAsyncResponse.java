@@ -5,6 +5,7 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import es.vytale.milanesa.common.concurrent.response.Response;
 import es.vytale.milanesa.common.concurrent.callback.Callback;
+import es.vytale.milanesa.common.executor.NekoExecutor;
 
 /**
  * This code has been created by
@@ -22,8 +23,8 @@ public class BasicAsyncResponse<T> implements AsyncResponse<T> {
     }
 
     @Override
-    public void addCallback(Callback<Response<T>> callback) {
-        Futures.addCallback(responseListenableFuture, parseCallback(callback));
+    public void addCallback(Callback<Response<T>> callback, NekoExecutor nekoExecutor) {
+        Futures.addCallback(responseListenableFuture, parseCallback(callback), nekoExecutor.getListeningExecutorService());
     }
 
     private FutureCallback<Response<T>> parseCallback(Callback<Response<T>> callback) {

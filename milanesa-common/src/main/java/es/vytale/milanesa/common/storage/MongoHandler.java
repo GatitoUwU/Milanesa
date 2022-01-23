@@ -5,6 +5,7 @@ import com.mongodb.MongoClientURI;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
+import es.vytale.milanesa.common.storage.credentials.MilanesaMongoCredentials;
 import lombok.Getter;
 
 import java.util.Collections;

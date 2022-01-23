@@ -1,4 +1,4 @@
-package es.vytale.milanesa.common.storage;
+package es.vytale.milanesa.common.storage.credentials;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

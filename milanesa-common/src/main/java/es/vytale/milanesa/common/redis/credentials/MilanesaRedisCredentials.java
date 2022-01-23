@@ -1,9 +1,8 @@
-package es.vytale.milanesa.common.redis;
+package es.vytale.milanesa.common.redis.credentials;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import es.vytale.milanesa.common.io.FileIO;
-import es.vytale.milanesa.common.storage.MilanesaMongoCredentials;
 import lombok.Data;
 import lombok.SneakyThrows;
 
@@ -21,8 +20,13 @@ public class MilanesaRedisCredentials {
     private String host = "redis-server";
     private int port = 6379;
     private int poolSize = 128;
+    private int timeout = 30_000;
     private String password = "saludito";
     private String channel = "Milanesa";
+
+    public boolean isAuthentication() {
+        return password != null && !password.isEmpty();
+    }
 
     @SneakyThrows
     public static MilanesaRedisCredentials fromFile(File file) {
