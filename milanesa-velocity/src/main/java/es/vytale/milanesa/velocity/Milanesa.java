@@ -16,7 +16,7 @@ import java.io.File;
 import java.nio.file.Path;
 
 @Plugin(
-        id = "milanesa-velocity",
+        id = "milanesa",
         name = "Milanesa",
         version = "1.0-SNAPSHOT",
         description = "Núcleo principal del servidor, versión para Velocity",
