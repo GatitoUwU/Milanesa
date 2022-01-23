@@ -27,7 +27,7 @@ public class MilanesaMessageHandler {
         this.gson = new Gson();
         this.channel = redisHandler.getCreds().getChannel();
 
-        registerRedis();
+        new Thread(this::registerRedis, "Milanesa - Redis Message Handler").start();
     }
 
     public void handleDeserialization(String data) {
