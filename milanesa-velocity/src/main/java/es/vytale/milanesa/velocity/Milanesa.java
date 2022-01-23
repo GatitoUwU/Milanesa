@@ -36,6 +36,8 @@ public class Milanesa {
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
+        dataFolder.toFile().mkdir();
+
         redisHandler = new RedisHandler(MilanesaRedisCredentials.fromFile(getFile("redis-credentials.json")));
         milanesaMessageHandler = new MilanesaMessageHandler(redisHandler);
 
