@@ -74,7 +74,8 @@ public class MongoDataAccessor<T extends DatableObject> {
 
         if (found == null) {
             t.setDownloaded(true);
-            // TODO: ADD UPLOAD XD
+            t.onDownload();
+            uploadData(t);
             return;
         }
 

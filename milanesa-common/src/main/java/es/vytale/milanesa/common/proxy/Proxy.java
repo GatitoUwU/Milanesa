@@ -1,8 +1,9 @@
 package es.vytale.milanesa.common.proxy;
 
+import lombok.Data;
 import lombok.Getter;
 
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -13,21 +14,35 @@ import java.util.concurrent.ConcurrentHashMap;
  * don't remove this messages and
  * give me the credits. Arigato! n.n
  */
-@Getter
+@Data
 public class Proxy {
     private final String name;
-    private final Set<UUID> players;
+    private Map<String, UUID> players;
 
     public Proxy(String name) {
         this.name = name;
-        players = ConcurrentHashMap.newKeySet();
+        players = new ConcurrentHashMap<>();
     }
 
     public int getOnline() {
         return players.size();
     }
 
+    public boolean isConnected(String name) {
+        return players.containsKey(name);
+    }
+
     public boolean isConnected(UUID uuid) {
-        return players.contains(uuid);
+        return players.containsValue(uuid);
+    }
+
+    public void loadFromProxyData(ProxyData proxyData) {
+        Map<String, UUID> players =  new ConcurrentHashMap<>();
+
+        proxyData.getPlayers().entrySet().forEach(json ->
+                players.put(json.getKey(), UUID.fromString(json.getValue().getAsString()))
+        );
+
+        setPlayers(players);
     }
 }

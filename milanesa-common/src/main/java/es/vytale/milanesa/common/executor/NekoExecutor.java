@@ -18,12 +18,13 @@ import java.util.concurrent.TimeUnit;
 @Getter
 public class NekoExecutor {
     private final int threads = Integer.getInteger("milanesa-threads-size", Runtime.getRuntime().availableProcessors() * 2);
+    private final int queueSize = Integer.getInteger("milanesa-queueSize", 1500);
     private final ListeningExecutorService listeningExecutorService;
 
     public NekoExecutor() {
-        System.out.println("Firing up a NekoExecutor with " + threads + " threads!");
+        System.out.println("Firing up a NekoExecutor with " + threads + " threads and a queue size of "+queueSize+"!");
         listeningExecutorService = MoreExecutors.listeningDecorator(
-                new ThreadPoolExecutor(threads, threads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(1500))
+                new ThreadPoolExecutor(threads, threads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(queueSize))
         );
     }
 

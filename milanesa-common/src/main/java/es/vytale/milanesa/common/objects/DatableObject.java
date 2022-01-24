@@ -17,7 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Data
 @RequiredArgsConstructor
-public class DatableObject {
+public abstract class DatableObject {
     private boolean downloaded = false;
 
     private final UUID uuid;
@@ -49,4 +49,10 @@ public class DatableObject {
     public String getDataOrCreateDefault(String key, String defaultValue) {
         return data.computeIfAbsent(key, ignored -> defaultValue);
     }
+
+    public boolean hasData(String key) {
+        return data.containsKey(key);
+    }
+
+    public abstract void onDownload();
 }

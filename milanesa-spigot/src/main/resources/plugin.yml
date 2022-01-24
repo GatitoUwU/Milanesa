@@ -1,6 +1,15 @@
 name: Milanesa
 version: '${project.version}'
 main: es.vytale.milanesa.spigot.Milanesa
-authors: [ gatogamer ]
+authors: [ "change-me-later" ]
 description: Núcleo principal del servidor, versión para Spigot
 website: https://vytale.es
+
+commands:
+  test-redis-latency:
+  friends:
+    aliases:
+      - "f"
+      - "friend"
+      - "amigos"
+      - "amigo"

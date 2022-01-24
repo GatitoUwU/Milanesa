@@ -54,6 +54,10 @@ public class MilanesaMessageHandler {
         channels.put(channel.getChannel(), channel);
     }
 
+    public void unregisterChannel(MilanesaChannel channel) {
+        channels.remove(channel.getChannel());
+    }
+
     private void registerRedis() {
         redisHandler.getJedisPool().getResource().subscribe(new JedisPubSub() {
             @Override
