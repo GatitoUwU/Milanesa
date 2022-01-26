@@ -1,15 +1,9 @@
 package es.vytale.milanesa.common.friends;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import es.vytale.milanesa.common.gson.ConcurrentHashMapTypeAdapter;
-import lombok.Data;
+import es.vytale.milanesa.common.objects.DatableObject;
 
-import java.lang.reflect.Type;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * This code has been created by
@@ -18,21 +12,28 @@ import java.util.concurrent.ConcurrentMap;
  * don't remove this messages and
  * give me the credits. Arigato! n.n
  */
-@Data
-public class FriendProfile {
-    private final UUID holder;
-    private final ConcurrentMap<String, UUID> following;
-    private final ConcurrentMap<String, UUID> followers;
+public class FriendProfile extends DatableObject {
 
-    private static final Gson gson;
-    static {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Type type = new TypeToken<ConcurrentHashMap<String, UUID>>() {}.getType();
-        gsonBuilder.registerTypeAdapter(type, new ConcurrentHashMapTypeAdapter<String, UUID>());
-        gson = gsonBuilder.create();
+    private FriendData friendData;
+
+    public FriendProfile(UUID uuid) {
+        super(uuid);
     }
 
-    public static Gson gson() {
-        return gson;
+    @Override
+    public void beforeUpload() {
+        putData("data", FriendData.gson().toJson(friendData)); // saving default profile.
+    }
+
+    @Override public void afterUpload() {}
+
+    @Override
+    public void onDownload() {
+        if (hasData("data")) {
+            friendData = FriendData.gson().fromJson(getData("data"), FriendData.class);
+        } else {
+            friendData = new FriendData(getUuid(), new ConcurrentHashMap<>(), new ConcurrentHashMap<>());
+            beforeUpload();
+        }
     }
 }

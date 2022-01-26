@@ -1,7 +1,10 @@
 package es.vytale.milanesa.spigot.commands;
 
+import es.vytale.milanesa.common.friends.FriendData;
 import es.vytale.milanesa.spigot.Milanesa;
+import es.vytale.milanesa.spigot.utils.MessageAPI;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -47,7 +50,7 @@ public class FriendsCommand implements CommandExecutor {
             List<String> connected = new ArrayList<>();
             List<String> disconnected = new ArrayList<>();
 
-            user.getFriendProfile().getFollowing().forEach((s, uuid) -> {
+            user.getFriendProfile().getFollowing().forEach((uuid, s) -> {
                 if (milanesa.getProxyManager().isConnected(s)) {
                     connected.add(s);
                 } else {
@@ -66,9 +69,34 @@ public class FriendsCommand implements CommandExecutor {
 
     public void handleAdd(Player player, String[] args) {
         if (args.length == 1) {
-            // TODO: suggestion of command
-        } else {
-            // TODO: add command
+            player.sendMessage(MessageAPI.colorize("&7Uso: &a/friend add <nombre>"));
+            return;
         }
+        Player target = Bukkit.getPlayer(args[1]);
+        if (target == null || !target.isOnline()) {
+            player.sendMessage(MessageAPI.colorize("&cEl jugador debe estar en el mismo servidor que tú para poder agregarle."));
+            return;
+        }
+        if (target.getUniqueId().equals(player.getUniqueId())) {
+            player.sendMessage(MessageAPI.colorize("&cNo puedes agregarte a ti mismo. D:"));
+            return;
+        }
+        milanesa.getUserManager().get(player.getUniqueId()).ifPresent(user -> {
+            FriendData fp = user.getFriendProfile();
+            if (fp.isFollowing(target.getUniqueId())) {
+                player.sendMessage(MessageAPI.colorize("&aYa tienes a " + player.getName() + " de amigx."));
+            } else {
+                player.sendMessage(MessageAPI.colorize("&aHas agregado correctamente a " + player.getName() + " a tu lista de amigos."));
+                user.getFriendProfile().getFollowing().put(target.getUniqueId(), target.getName());
+                milanesa.getUserDataAccessor().uploadData(milanesa.getNekoExecutor(), user);
+            }
+        });
+        milanesa.getUserManager().get(player.getUniqueId()).ifPresent(user -> {
+            FriendData fp = user.getFriendProfile();
+            if (!fp.isFollower(target.getUniqueId())) {
+                fp.getFollowers().put(player.getUniqueId(), player.getName());
+                milanesa.getUserDataAccessor().uploadData(milanesa.getNekoExecutor(), user);
+            }
+        });
     }
 }

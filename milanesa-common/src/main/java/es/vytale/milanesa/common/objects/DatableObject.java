@@ -54,5 +54,7 @@ public abstract class DatableObject {
         return data.containsKey(key);
     }
 
+    public abstract void beforeUpload();
+    public abstract void afterUpload();
     public abstract void onDownload();
 }

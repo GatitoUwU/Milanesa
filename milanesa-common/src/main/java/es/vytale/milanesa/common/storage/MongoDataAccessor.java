@@ -58,10 +58,12 @@ public class MongoDataAccessor<T extends DatableObject> {
         if (!t.isDownloaded()) {
             return;
         }
+        t.beforeUpload();
         Document document = new Document("uuid", t.getUuid().toString());
         document.put("data", new Gson().toJson(t.asJsonObject()));
 
         dataCollection.replaceOne(Filters.eq("uuid", t.getUuid().toString()), document, new ReplaceOptions().upsert(true));
+        t.afterUpload();
     }
 
     public void downloadData(NekoExecutor nekoExecutor, T t) {
