@@ -26,24 +26,24 @@ public class FriendsTest {
         UUID follower1 = UUID.randomUUID();
         String follower1_ = "uwu2";
 
-        FriendData friendProfile = new FriendData(holder, getFrom(following1_, following1), getFrom(follower1_, follower1));
+        FriendData friendProfile = new FriendData(holder, getFrom(following1, following1_), getFrom(follower1, follower1_));
 
         Gson gson = FriendData.gson();
 
         String json = gson.toJson(friendProfile);
-        System.out.println("Serializing: "+json);
+        System.out.println("Serializing: " + json);
 
         FriendData deserialized = gson.fromJson(json, FriendData.class);
 
         System.out.println("");
         System.out.println("Attempting to deserialize:");
 
-        System.out.println("Deserialized: "+deserialized+ " and maps are: "+deserialized.getFollowers().getClass().getSimpleName()+" "+deserialized.getFollowing().getClass().getSimpleName());
+        System.out.println("Deserialized: " + deserialized + " and maps are: " + deserialized.getFollowers().getClass().getSimpleName() + " " + deserialized.getFollowing().getClass().getSimpleName());
         System.out.println("--------------------------");
     }
 
-    public ConcurrentMap<String, UUID> getFrom(String a, UUID a2) {
-        ConcurrentMap<String, UUID> map =  new ConcurrentHashMap<>();
+    public ConcurrentMap<UUID, String> getFrom(UUID a, String a2) {
+        ConcurrentMap<UUID, String> map = new ConcurrentHashMap<>();
         map.put(a, a2);
         return map;
     }

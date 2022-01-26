@@ -1,14 +1,10 @@
 package es.vytale.milanesa.common.friends;
 
-import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import es.vytale.milanesa.common.gson.ConcurrentHashMapTypeAdapter;
 import lombok.Data;
 
-import java.lang.reflect.Type;
 import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
@@ -32,15 +28,7 @@ public class FriendData {
         return followers.containsKey(uuid);
     }
 
-    private static final Gson gson;
-    static {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Type type = new TypeToken<ConcurrentHashMap<UUID, String>>() {
-        }.getType();
-        gsonBuilder.registerTypeAdapter(type, new ConcurrentHashMapTypeAdapter<UUID, String>());
-        gson = gsonBuilder.create();
-    }
     public static Gson gson() {
-        return gson;
+        return new Gson();
     }
 }
