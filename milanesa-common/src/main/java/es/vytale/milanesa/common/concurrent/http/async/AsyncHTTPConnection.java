@@ -1,13 +1,13 @@
 package es.vytale.milanesa.common.concurrent.http.async;
 
 import com.google.common.util.concurrent.ListeningExecutorService;
+import es.vytale.milanesa.common.concurrent.async.AsyncResponse;
 import es.vytale.milanesa.common.concurrent.async.BasicAsyncResponse;
 import es.vytale.milanesa.common.concurrent.response.BasicResponse;
 import es.vytale.milanesa.common.concurrent.response.ResponseStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
-import es.vytale.milanesa.common.concurrent.async.AsyncResponse;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.io.BufferedReader;

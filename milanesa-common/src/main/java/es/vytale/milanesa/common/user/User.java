@@ -1,6 +1,5 @@
 package es.vytale.milanesa.common.user;
 
-import es.vytale.milanesa.common.friends.FriendData;
 import es.vytale.milanesa.common.objects.DatableObject;
 import lombok.Getter;
 import lombok.Setter;

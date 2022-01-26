@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import lombok.Data;
 import org.junit.Test;
 
-import java.util.Set;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 /**

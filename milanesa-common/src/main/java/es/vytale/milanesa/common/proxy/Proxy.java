@@ -1,7 +1,6 @@
 package es.vytale.milanesa.common.proxy;
 
 import lombok.Data;
-import lombok.Getter;
 
 import java.util.Map;
 import java.util.UUID;

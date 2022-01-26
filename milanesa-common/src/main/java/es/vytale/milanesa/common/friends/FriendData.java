@@ -1,7 +1,6 @@
 package es.vytale.milanesa.common.friends;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.Data;
 
 import java.util.UUID;
