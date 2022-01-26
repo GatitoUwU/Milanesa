@@ -22,7 +22,7 @@ public class NekoExecutor {
     private final ListeningExecutorService listeningExecutorService;
 
     public NekoExecutor() {
-        System.out.println("Firing up a NekoExecutor with " + threads + " threads and a queue size of "+queueSize+"!");
+        System.out.println("Firing up a NekoExecutor with " + threads + " threads and a queue size of " + queueSize + "!");
         listeningExecutorService = MoreExecutors.listeningDecorator(
                 new ThreadPoolExecutor(threads, threads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<>(queueSize))
         );

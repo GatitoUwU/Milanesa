@@ -36,7 +36,7 @@ public class Proxy {
     }
 
     public void loadFromProxyData(ProxyData proxyData) {
-        Map<String, UUID> players =  new ConcurrentHashMap<>();
+        Map<String, UUID> players = new ConcurrentHashMap<>();
 
         proxyData.getPlayers().entrySet().forEach(json ->
                 players.put(json.getKey(), UUID.fromString(json.getValue().getAsString()))

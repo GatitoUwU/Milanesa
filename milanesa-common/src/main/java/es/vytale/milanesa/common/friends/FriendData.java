@@ -19,15 +19,15 @@ public class FriendData {
     private final ConcurrentMap<UUID, String> following;
     private final ConcurrentMap<UUID, String> followers;
 
+    public static Gson gson() {
+        return new Gson();
+    }
+
     public boolean isFollowing(UUID uuid) {
         return following.containsKey(uuid);
     }
 
     public boolean isFollower(UUID uuid) {
         return followers.containsKey(uuid);
-    }
-
-    public static Gson gson() {
-        return new Gson();
     }
 }

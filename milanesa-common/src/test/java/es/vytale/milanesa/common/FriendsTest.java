@@ -35,7 +35,7 @@ public class FriendsTest {
 
         FriendData deserialized = gson.fromJson(json, FriendData.class);
 
-        System.out.println("");
+        System.out.println();
         System.out.println("Attempting to deserialize:");
 
         System.out.println("Deserialized: " + deserialized + " and maps are: " + deserialized.getFollowers().getClass().getSimpleName() + " " + deserialized.getFollowing().getClass().getSimpleName());

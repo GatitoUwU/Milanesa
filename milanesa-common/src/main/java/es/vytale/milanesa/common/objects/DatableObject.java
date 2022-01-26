@@ -18,10 +18,9 @@ import java.util.concurrent.ConcurrentHashMap;
 @Data
 @RequiredArgsConstructor
 public abstract class DatableObject {
-    private boolean downloaded = false;
-
     private final UUID uuid;
     private final Map<String, String> data = new ConcurrentHashMap<>();
+    private boolean downloaded = false;
 
     public JsonObject asJsonObject() {
         JsonObject jsonObject = new JsonObject();
@@ -55,6 +54,8 @@ public abstract class DatableObject {
     }
 
     public abstract void beforeUpload();
+
     public abstract void afterUpload();
+
     public abstract void onDownload();
 }

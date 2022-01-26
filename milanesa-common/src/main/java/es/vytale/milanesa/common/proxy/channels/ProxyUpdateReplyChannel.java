@@ -31,11 +31,11 @@ public class ProxyUpdateReplyChannel extends MilanesaChannel {
 
     @Override
     public void handle(MilanesaMessage milanesaMessage) {
-        System.out.println( "Handling proxy-update-request for request: " + milanesaMessage.getData());
+        System.out.println("Handling proxy-update-request for request: " + milanesaMessage.getData());
 
         if (!milanesaMessage.getData().equals(proxyManager.getActualProxy())) {
             String msg = gson.toJson(ProxyData.fromProxy(proxyManager.getSelf()));
-            System.out.println( "Replying proxy-update-request for request: " + milanesaMessage.getData() + " with " + msg);
+            System.out.println("Replying proxy-update-request for request: " + milanesaMessage.getData() + " with " + msg);
             nekoExecutor.submit(() ->
                     milanesaMessageHandler.sendMessage("proxy-communication", msg)
             );

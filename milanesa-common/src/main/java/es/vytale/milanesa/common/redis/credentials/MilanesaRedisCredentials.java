@@ -24,10 +24,6 @@ public class MilanesaRedisCredentials {
     private String password = "saludito";
     private String channel = "Milanesa";
 
-    public boolean isAuthentication() {
-        return password != null && !password.isEmpty();
-    }
-
     @SneakyThrows
     public static MilanesaRedisCredentials fromFile(File file) {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -41,5 +37,9 @@ public class MilanesaRedisCredentials {
         }
 
         return gson.fromJson(json, MilanesaRedisCredentials.class);
+    }
+
+    public boolean isAuthentication() {
+        return password != null && !password.isEmpty();
     }
 }

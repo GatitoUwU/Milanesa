@@ -29,7 +29,7 @@ public class ProxyPlayerUpdateChannel extends MilanesaChannel {
 
     @Override
     public void handle(MilanesaMessage milanesaMessage) {
-        System.out.println( "Handling proxy-player-update for request: " + milanesaMessage.getData());
+        System.out.println("Handling proxy-player-update for request: " + milanesaMessage.getData());
 
         PlayerUpdateData pud = gson.fromJson(milanesaMessage.getData(), PlayerUpdateData.class);
         PlayerUpdateType put = pud.getPlayerUpdateType();

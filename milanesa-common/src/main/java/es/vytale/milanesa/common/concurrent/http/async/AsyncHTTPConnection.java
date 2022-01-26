@@ -47,7 +47,7 @@ public abstract class AsyncHTTPConnection<T> {
         if (code == 200) {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
-            StringBuilder builder = new StringBuilder("");
+            StringBuilder builder = new StringBuilder();
             bufferedReader.lines().forEach(builder::append);
 
             bufferedReader.close();

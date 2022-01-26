@@ -22,7 +22,15 @@ public class User<T> extends DatableObject {
         super(uuid);
     }
 
-    @Override public void beforeUpload() {}
-    @Override public void afterUpload() {}
-    @Override public void onDownload() {}
+    @Override
+    public void beforeUpload() {
+    }
+
+    @Override
+    public void afterUpload() {
+    }
+
+    @Override
+    public void onDownload() {
+    }
 }

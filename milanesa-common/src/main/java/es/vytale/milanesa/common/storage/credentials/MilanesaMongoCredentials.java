@@ -21,6 +21,21 @@ public class MilanesaMongoCredentials {
     private UserCredentials userCredentials = new UserCredentials();
     private UriModeCredentials uriModeCredentials = new UriModeCredentials();
 
+    @SneakyThrows
+    public static MilanesaMongoCredentials fromFile(File file) {
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        String json;
+        if (file.createNewFile()) {
+            json = gson.toJson(new MilanesaMongoCredentials());
+            FileIO.writeFile(file, json);
+        } else {
+            json = FileIO.readFile(file);
+        }
+
+        return gson.fromJson(json, MilanesaMongoCredentials.class);
+    }
+
     @Data
     public static class UserCredentials {
         private String host = "mongo-server";
@@ -42,20 +57,5 @@ public class MilanesaMongoCredentials {
     public static class UriModeCredentials {
         private String uriString = "";
         private String uriDb = "Milanesa";
-    }
-
-    @SneakyThrows
-    public static MilanesaMongoCredentials fromFile(File file) {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-        String json;
-        if (file.createNewFile()) {
-            json = gson.toJson(new MilanesaMongoCredentials());
-            FileIO.writeFile(file, json);
-        } else {
-            json = FileIO.readFile(file);
-        }
-
-        return gson.fromJson(json, MilanesaMongoCredentials.class);
     }
 }

@@ -11,6 +11,6 @@ import es.vytale.milanesa.common.executor.NekoExecutor;
  * don't remove this messages and
  * give me the credits. Arigato! n.n
  */
-public interface AsyncResponse<T>{
+public interface AsyncResponse<T> {
     void addCallback(Callback<Response<T>> callback, NekoExecutor nekoExecutor);
 }

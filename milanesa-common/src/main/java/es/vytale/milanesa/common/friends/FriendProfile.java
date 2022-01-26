@@ -25,7 +25,9 @@ public class FriendProfile extends DatableObject {
         putData("data", FriendData.gson().toJson(friendData)); // saving default profile.
     }
 
-    @Override public void afterUpload() {}
+    @Override
+    public void afterUpload() {
+    }
 
     @Override
     public void onDownload() {

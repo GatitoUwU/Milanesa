@@ -40,7 +40,7 @@ public class MongoDataAccessor<T extends DatableObject> {
         );
     }
 
-    public Response<T> downloadAsSync (T t) {
+    public Response<T> downloadAsSync(T t) {
         try {
             this.downloadData(t);
         } catch (Exception ex) {

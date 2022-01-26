@@ -10,7 +10,7 @@ import java.util.function.Consumer;
  * don't remove this messages and
  * give me the credits. Arigato! n.n
  */
-public interface Response<T>{
+public interface Response<T> {
 
     /**
      * Used to get the status of the response
@@ -43,7 +43,6 @@ public interface Response<T>{
      */
 
     void ifSuccessful(Consumer<Optional<T>> consumer);
-
 
 
 }

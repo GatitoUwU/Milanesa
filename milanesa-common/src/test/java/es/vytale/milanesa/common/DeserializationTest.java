@@ -27,10 +27,10 @@ public class DeserializationTest {
 
         String json = gson.toJson(test);
 
-        System.out.println("Gson: "+json);
+        System.out.println("Gson: " + json);
 
         TestData testDataDeserialized = gson.fromJson(json, TestData.class);
-        System.out.println("Set used is: "+testDataDeserialized.getSet().getClass().getSimpleName());
+        System.out.println("Set used is: " + testDataDeserialized.getSet().getClass().getSimpleName());
     }
 
     @Data
