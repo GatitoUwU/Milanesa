@@ -28,7 +28,7 @@ public class ProxyCommunicationChannel extends MilanesaChannel {
     public void handle(MilanesaMessage milanesaMessage) {
         ProxyData proxyData = gson.fromJson(milanesaMessage.getData(), ProxyData.class);
 
-        if (!proxyData.getName().equals(proxyManager.getSelf().getName())) {
+        if (proxyManager.getSelf() == null || !proxyData.getName().equals(proxyManager.getSelf().getName())) {
             System.out.println("Handling proxy-communication for request: " + milanesaMessage.getData());
             Proxy proxy = proxyManager.getOrCreate(proxyData.getName());
             proxy.loadFromProxyData(proxyData);

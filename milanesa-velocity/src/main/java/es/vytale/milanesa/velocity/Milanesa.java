@@ -2,6 +2,7 @@ package es.vytale.milanesa.velocity;
 
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
+import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
@@ -12,8 +13,11 @@ import es.vytale.milanesa.common.redis.RedisHandler;
 import es.vytale.milanesa.common.redis.credentials.MilanesaRedisCredentials;
 import es.vytale.milanesa.common.redis.data.MilanesaChannel;
 import es.vytale.milanesa.common.redis.data.MilanesaMessage;
+import es.vytale.milanesa.velocity.balancer.BalancerManager;
+import es.vytale.milanesa.velocity.limbo.LimboManager;
 import es.vytale.milanesa.velocity.listeners.ConnectionListener;
 import es.vytale.milanesa.velocity.listeners.PingListener;
+import lombok.Getter;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
@@ -26,8 +30,10 @@ import java.nio.file.Path;
         version = "1.0-SNAPSHOT",
         description = "Núcleo principal del servidor, versión para Velocity",
         url = "https://vytale.es",
-        authors = {"change-me-later"}
+        authors = {"change-me-later"},
+        dependencies = {@Dependency(id = "limboapi")}
 )
+@Getter
 public class Milanesa {
     @Inject
     private Logger logger;
@@ -44,6 +50,9 @@ public class Milanesa {
     private MilanesaMessageHandler milanesaMessageHandler;
 
     private ProxyManager proxyManager;
+
+    private LimboManager limboManager;
+    private BalancerManager balancerManager;
 
     @Subscribe
     public void onProxyInitialization(ProxyInitializeEvent event) {
@@ -71,7 +80,10 @@ public class Milanesa {
 
         proxyManager = new ProxyManager(proxyId, nekoExecutor, milanesaMessageHandler);
 
-        proxyServer.getEventManager().register(this, new ConnectionListener(nekoExecutor, proxyManager));
+        limboManager = new LimboManager(this);
+        balancerManager = new BalancerManager(this);
+
+        proxyServer.getEventManager().register(this, new ConnectionListener(this));
         proxyServer.getEventManager().register(this, new PingListener(proxyManager));
     }
 

@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import es.vytale.milanesa.common.redis.data.MilanesaChannel;
 import es.vytale.milanesa.common.redis.data.MilanesaMessage;
 import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
 
 import java.util.Map;
@@ -21,6 +22,8 @@ public class MilanesaMessageHandler {
     private final Gson gson;
     private final Map<String, MilanesaChannel> channels = new ConcurrentHashMap<>();
     private final String channel;
+
+    private Jedis jedis;
 
     public MilanesaMessageHandler(RedisHandler redisHandler) {
         this.redisHandler = redisHandler;
@@ -59,11 +62,24 @@ public class MilanesaMessageHandler {
     }
 
     private void registerRedis() {
-        redisHandler.getJedisPool().getResource().subscribe(new JedisPubSub() {
+        jedis = redisHandler.getJedisPool().getResource();
+        jedis.subscribe(new JedisPubSub() {
             @Override
             public void onMessage(String channel, String message) {
-                handleDeserialization(message);
+                try {
+                    handleDeserialization(message);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }, channel);
+    }
+
+    public void kill() {
+        try {
+            jedis.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

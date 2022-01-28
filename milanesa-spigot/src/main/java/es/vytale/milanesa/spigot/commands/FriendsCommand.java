@@ -1,6 +1,9 @@
 package es.vytale.milanesa.spigot.commands;
 
 import es.vytale.milanesa.common.friends.FriendData;
+import es.vytale.milanesa.common.friends.FriendProfile;
+import es.vytale.milanesa.common.friends.FriendProfileAccessor;
+import es.vytale.milanesa.common.user.User;
 import es.vytale.milanesa.spigot.Milanesa;
 import es.vytale.milanesa.spigot.utils.MessageAPI;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +16,8 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * This code has been created by
@@ -47,56 +52,101 @@ public class FriendsCommand implements CommandExecutor {
 
     public void handleList(Player player) {
         milanesa.getUserManager().get(player.getUniqueId()).ifPresent(user -> {
-            List<String> connected = new ArrayList<>();
-            List<String> disconnected = new ArrayList<>();
+            if (user.isFriendsLock()) {
+                player.sendMessage(MessageAPI.colorize("&bBackend &8> &7Ya estamos procesando una solicitud, espérate a que esta termine..."));
+                return;
+            }
 
-            user.getFriendProfile().getFollowing().forEach((uuid, s) -> {
-                if (milanesa.getProxyManager().isConnected(s)) {
-                    connected.add(s);
+            user.setFriendsLock(true);
+
+            FriendProfile baseProfile = new FriendProfile(player.getUniqueId());
+            milanesa.getFriendProfileAccessor().downloadAsync(milanesa.getNekoExecutor(), baseProfile).addCallback(profileResponse -> {
+                user.setFriendsLock(false);
+                if (profileResponse.wasSuccessfully()) {
+                    System.out.println(baseProfile.getFriendData().toString());
+                    System.out.println(baseProfile.getFriendData().getFollowing().getClass().getSimpleName());
+                    System.out.println(baseProfile.getFriendData().getFollowers().getClass().getSimpleName());
+                    Map<UUID, String> following = baseProfile.getFriendData().getFollowing();
+
+                    if (following.isEmpty()) {
+                        player.sendMessage(MessageAPI.colorize("&bAmigos &8> &cNo tienes amigos, triste, pero cierto :c"));
+                        return;
+                    }
+
+                    List<String> connected = new ArrayList<>();
+                    List<String> disconnected = new ArrayList<>();
+
+                    following.forEach((uuid, s) -> {
+                        if (milanesa.getProxyManager().isConnected(s)) {
+                            connected.add(s);
+                        } else {
+                            disconnected.add(s);
+                        }
+                    });
+
+                    connected.forEach(connectedUser ->
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a" + connectedUser))
+                    );
+                    disconnected.forEach(disconnectedUser ->
+                            player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c" + disconnectedUser))
+                    );
                 } else {
-                    disconnected.add(s);
+                    player.sendMessage(MessageAPI.colorize("&bBackend &8> &cError al procesar la petición..."));
                 }
-            });
-
-            connected.forEach(connectedUser ->
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a" + connectedUser))
-            );
-            disconnected.forEach(disconnectedUser ->
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c" + disconnectedUser))
-            );
+            }, milanesa.getNekoExecutor());
         });
     }
 
     public void handleAdd(Player player, String[] args) {
         if (args.length == 1) {
-            player.sendMessage(MessageAPI.colorize("&7Uso: &a/friend add <nombre>"));
+            player.sendMessage(MessageAPI.colorize("&bAmigos &8> &7Uso: &a/friend add <nombre>"));
             return;
         }
         Player target = Bukkit.getPlayer(args[1]);
         if (target == null || !target.isOnline()) {
-            player.sendMessage(MessageAPI.colorize("&cEl jugador debe estar en el mismo servidor que tú para poder agregarle."));
+            player.sendMessage(MessageAPI.colorize("&bAmigos &8> &cEl jugador debe estar en el mismo servidor que tú para poder agregarle."));
             return;
         }
         if (target.getUniqueId().equals(player.getUniqueId())) {
-            player.sendMessage(MessageAPI.colorize("&cNo puedes agregarte a ti mismo. D:"));
+            player.sendMessage(MessageAPI.colorize("&bAmigos &8> &cNo puedes agregarte a ti mismo. D:"));
             return;
         }
-        milanesa.getUserManager().get(player.getUniqueId()).ifPresent(user -> {
-            FriendData fp = user.getFriendProfile();
-            if (fp.isFollowing(target.getUniqueId())) {
+
+        User<Player> user = milanesa.getUserManager().get(player.getUniqueId()).orElse(null);
+
+        if (user == null) {
+            player.sendMessage(MessageAPI.colorize("&bBackend &8> &7Hubo un error mientras cargábamos tu información, sí el error persiste, reconéctate..."));
+            return;
+        }
+
+        if (user.isFriendsLock()) {
+            player.sendMessage(MessageAPI.colorize("&bBackend &8> &7Ya estamos procesando una solicitud, espérate a que esta termine..."));
+            return;
+        }
+
+        user.setFriendsLock(true);
+        milanesa.getNekoExecutor().submit(() -> {
+            FriendProfile playerProfile = new FriendProfile(player.getUniqueId());
+            FriendProfile targetProfile = new FriendProfile(target.getUniqueId());
+
+            FriendProfileAccessor fpa = milanesa.getFriendProfileAccessor();
+            fpa.downloadAsSync(playerProfile);
+            fpa.downloadAsSync(targetProfile);
+
+            FriendData playerFriendData = playerProfile.getFriendData();
+            FriendData targetFriendData = targetProfile.getFriendData();
+
+
+            if (playerFriendData.isFollowing(target.getUniqueId())) {
                 player.sendMessage(MessageAPI.colorize("&aYa tienes a " + player.getName() + " de amigx."));
             } else {
                 player.sendMessage(MessageAPI.colorize("&aHas agregado correctamente a " + player.getName() + " a tu lista de amigos."));
-                user.getFriendProfile().getFollowing().put(target.getUniqueId(), target.getName());
-                milanesa.getUserDataAccessor().uploadData(milanesa.getNekoExecutor(), user);
+                playerFriendData.getFollowing().put(target.getUniqueId(), target.getName());
+                targetFriendData.getFollowers().put(player.getUniqueId(), player.getName());
+                fpa.uploadData(playerProfile);
+                fpa.uploadData(targetProfile);
             }
-        });
-        milanesa.getUserManager().get(player.getUniqueId()).ifPresent(user -> {
-            FriendData fp = user.getFriendProfile();
-            if (!fp.isFollower(target.getUniqueId())) {
-                fp.getFollowers().put(player.getUniqueId(), player.getName());
-                milanesa.getUserDataAccessor().uploadData(milanesa.getNekoExecutor(), user);
-            }
+            user.setFriendsLock(false);
         });
     }
 }

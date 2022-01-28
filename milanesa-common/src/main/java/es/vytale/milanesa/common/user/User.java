@@ -18,6 +18,8 @@ import java.util.UUID;
 public class User<T> extends DatableObject {
     private T player;
 
+    private boolean friendsLock = false;
+
     public User(UUID uuid) {
         super(uuid);
     }

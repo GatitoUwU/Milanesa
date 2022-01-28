@@ -86,6 +86,7 @@ public class MongoDataAccessor<T extends DatableObject> {
 
     public void downloadData(Document document, T t) {
         t.fromJson(new Gson().fromJson(document.getString("data"), JsonObject.class));
+        t.onDownload();
         t.setDownloaded(true);
     }
 

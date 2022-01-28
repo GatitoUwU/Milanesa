@@ -1,6 +1,7 @@
 package es.vytale.milanesa.spigot;
 
 import es.vytale.milanesa.common.executor.NekoExecutor;
+import es.vytale.milanesa.common.friends.FriendProfileAccessor;
 import es.vytale.milanesa.common.proxy.ProxyManager;
 import es.vytale.milanesa.common.redis.MilanesaMessageHandler;
 import es.vytale.milanesa.common.redis.RedisHandler;
@@ -12,7 +13,10 @@ import es.vytale.milanesa.common.storage.credentials.MilanesaMongoCredentials;
 import es.vytale.milanesa.common.user.UserDataAccessor;
 import es.vytale.milanesa.common.user.UserManager;
 import es.vytale.milanesa.spigot.commands.FriendsCommand;
+import es.vytale.milanesa.spigot.listeners.ConnectionListener;
 import lombok.Getter;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -32,6 +36,8 @@ public class Milanesa extends JavaPlugin {
     private UserManager<Player> userManager;
     private UserDataAccessor<Player> userDataAccessor;
 
+    private FriendProfileAccessor friendProfileAccessor;
+
     private ProxyManager proxyManager;
 
     @Override
@@ -47,7 +53,7 @@ public class Milanesa extends JavaPlugin {
 
         userManager = new UserManager<>();
         userDataAccessor = new UserDataAccessor<>(mongoHandler.getDatabase());
-
+        friendProfileAccessor = new FriendProfileAccessor(mongoHandler.getDatabase());
 
         AtomicLong handled = new AtomicLong();
 
@@ -72,6 +78,8 @@ public class Milanesa extends JavaPlugin {
         getCommand("friends").setExecutor(new FriendsCommand(this));
 
         proxyManager = new ProxyManager(null, nekoExecutor, milanesaMessageHandler);
+
+        Bukkit.getPluginManager().registerEvents(new ConnectionListener(this), this);
     }
 
     public File getFile(String file) {
@@ -80,6 +88,8 @@ public class Milanesa extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(ChatColor.translateAlternateColorCodes('&', "&bMilanesa &8> &7Has sido expulsadx debido a que el servidor se está reiniciando.")));
+        redisHandler.kill();
+        milanesaMessageHandler.kill();
     }
 }

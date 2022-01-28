@@ -69,6 +69,9 @@ public class ProxyManager extends CachedManager<String, Proxy> {
     }
 
     public Proxy getSelf() {
+        if (actualProxy == null || actualProxy.isEmpty()) {
+            return null;
+        }
         return getValues().get(actualProxy);
     }
 

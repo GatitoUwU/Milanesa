@@ -1,6 +1,7 @@
 package es.vytale.milanesa.common.friends;
 
 import es.vytale.milanesa.common.objects.DatableObject;
+import lombok.Getter;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,6 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * don't remove this messages and
  * give me the credits. Arigato! n.n
  */
+@Getter
 public class FriendProfile extends DatableObject {
 
     private FriendData friendData;

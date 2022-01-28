@@ -24,4 +24,17 @@ public class RedisHandler {
 
         jedisPool = new JedisPool(jpc, creds.getHost(), creds.getPort(), creds.getTimeout(), creds.isAuthentication() ? creds.getPassword() : null);
     }
+
+    public void kill() {
+        try {
+            jedisPool.clear();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            jedisPool.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
