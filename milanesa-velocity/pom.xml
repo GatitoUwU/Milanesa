@@ -92,7 +92,7 @@
             <artifactId>limboapi-plugin</artifactId>
             <version>1.0.3</version>
             <scope>system</scope>
-            <systemPath>${pom.basedir}/libs/limboapi-plugin-1.0.3-jdk11.jar</systemPath>
+            <systemPath>${parent.basedir}/libs/limboapi-plugin-1.0.3-jdk11.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
