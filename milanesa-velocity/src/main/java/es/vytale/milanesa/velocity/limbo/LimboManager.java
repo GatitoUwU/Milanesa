@@ -49,7 +49,7 @@ public class LimboManager {
         queue = new ConcurrentLinkedQueue<>();
 
         limboQueueProcessor = new LimboQueueProcessor(milanesa);
-        milanesa.getProxyServer().getScheduler().buildTask(milanesa, limboQueueProcessor::process).repeat(2L, TimeUnit.SECONDS);
+        milanesa.getProxyServer().getScheduler().buildTask(milanesa, limboQueueProcessor::process).repeat(2L, TimeUnit.SECONDS).schedule();
     }
 
     public void connect(Player player) {

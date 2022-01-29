@@ -10,10 +10,10 @@ import com.velocitypowered.api.event.player.PlayerChooseInitialServerEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import es.vytale.milanesa.velocity.Milanesa;
-import jdk.jfr.Registered;
 import lombok.RequiredArgsConstructor;
 import net.elytrium.limboapi.api.event.LoginLimboRegisterEvent;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
 
 import java.util.concurrent.TimeUnit;
@@ -48,7 +48,10 @@ public class ConnectionListener {
         if (balanced != null) {
             pendingConnections.put(player, balanced);
         } else {
-            event.addCallback(() -> milanesa.getLimboManager().connect(player));
+            event.addCallback(() -> {
+                milanesa.getLimboManager().connect(player);
+                milanesa.getLimboManager().getQueue().add(player);
+            });
         }
     }
 
@@ -64,7 +67,7 @@ public class ConnectionListener {
                 event.setInitialServer(registeredServer);
             }
         } catch (Exception e) {
-            player.disconnect(Component.text("&cError al procesar tu conexión, sí esto sigue ocurriendo, contáctanos en Discord..."));
+            player.disconnect(Component.text("Error al procesar tu conexión, sí esto sigue ocurriendo, contáctanos en Discord...").color(NamedTextColor.RED));
         }
     }
 

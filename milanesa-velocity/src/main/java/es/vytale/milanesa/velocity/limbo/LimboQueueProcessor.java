@@ -4,7 +4,7 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import es.vytale.milanesa.velocity.Milanesa;
 import lombok.RequiredArgsConstructor;
-import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,7 +22,7 @@ public class LimboQueueProcessor {
 
     public void process() {
         Queue<Player> queue = milanesa.getLimboManager().getQueue();
-        AtomicInteger joining = new AtomicInteger();
+        AtomicInteger joining = new AtomicInteger(0);
 
         while (true) {
             RegisteredServer registeredServer = milanesa.getBalancerManager().getDefaultServer(joining.get());
@@ -31,18 +31,25 @@ public class LimboQueueProcessor {
                 break; // break if the lobby server is null;
             }
 
-            if (queue == null || queue.isEmpty()) {
+            queue.removeIf(player -> !player.isActive());
+
+            if (queue.isEmpty()) {
                 break; // break the while if queue is empty qwq
             }
 
             Player player = queue.peek();
             joining.incrementAndGet();
-            player.sendMessage(Component.text("Enviándote."));
             player.createConnectionRequest(registeredServer).connect().thenAccept(result -> {
                 if (result.isSuccessful()) {
                     queue.remove(player);
                 }
             });
         }
+
+        AtomicInteger index = new AtomicInteger(0);
+        int size = queue.size();
+        queue.forEach(player ->
+                player.sendActionBar(LegacyComponentSerializer.legacy('&').deserialize("&bCola &8> &7Posición &b" + index.incrementAndGet() + "&7/&b" + size))
+        );
     }
 }

@@ -51,7 +51,7 @@ public class BalancerServers {
             Optional<ServerPing> serverPingOptional = Optional.ofNullable(pings.get(rs));
             int players = serverPingOptional.map(serverPing -> serverPing.getPlayers().map(ServerPing.Players::getOnline).orElse(rs.getPlayersConnected().size())).orElse(rs.getPlayersConnected().size()) + joining;
             int max = serverPingOptional.map(serverPing -> serverPing.getPlayers().map(ServerPing.Players::getMax).orElse(100)).orElse(100);
-            return players > max; // ensures server is not full.
+            return max > players; // ensures server is not full.
         }).min(Comparator.comparing(rs -> rs.getPlayersConnected().size())).orElse(null);
     }
 }
