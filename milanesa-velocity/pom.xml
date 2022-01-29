@@ -78,7 +78,7 @@
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
-            <version>RELEASE</version>
+            <version>1.18.22</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -92,7 +92,7 @@
             <artifactId>limboapi-plugin</artifactId>
             <version>1.0.3</version>
             <scope>system</scope>
-            <systemPath>${parent.basedir}/libs/limboapi-plugin-1.0.3-jdk11.jar</systemPath>
+            <systemPath>${pom.basedir}/libs/limboapi-plugin-1.0.3-jdk11.jar</systemPath>
         </dependency>
     </dependencies>
 </project>
