@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import es.vytale.milanesa.common.redis.data.MilanesaChannel;
 import es.vytale.milanesa.common.redis.data.MilanesaMessage;
 import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPubSub;
 
 import java.util.Map;
@@ -41,6 +40,10 @@ public class MilanesaMessageHandler {
         if (milanesaChannel != null) {
             milanesaChannel.handle(milanesaMessage);
         }
+    }
+
+    public void sendMessage(String subChannel, Object data) {
+        sendMessage(new MilanesaMessage(subChannel, gson.toJson(data)));
     }
 
     public void sendMessage(String subChannel, String data) {

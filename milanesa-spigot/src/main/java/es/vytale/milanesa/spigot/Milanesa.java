@@ -88,7 +88,7 @@ public class Milanesa extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(ChatColor.translateAlternateColorCodes('&', "&bMilanesa &8> &7Has sido expulsadx debido a que el servidor se está reiniciando.")));
+        Bukkit.getOnlinePlayers().forEach(player -> player.kickPlayer(ChatColor.translateAlternateColorCodes('&', "&bMilanesa &8> &7Te hemos expulsado debido a que el servidor se está reiniciando.")));
         redisHandler.kill();
         milanesaMessageHandler.kill();
     }

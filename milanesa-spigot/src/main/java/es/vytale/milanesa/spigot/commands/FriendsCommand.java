@@ -38,11 +38,11 @@ public class FriendsCommand implements CommandExecutor {
 
             if (args.length > 0) {
                 if (args[0].equalsIgnoreCase("list")) {
-                    handleList(player);
+                    //handleList(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("add")) {
-                    handleAdd(player, args);
+                    //handleAdd(player, args);
                     return true;
                 }
             }
@@ -138,7 +138,7 @@ public class FriendsCommand implements CommandExecutor {
 
 
             if (playerFriendData.isFollowing(target.getUniqueId())) {
-                player.sendMessage(MessageAPI.colorize("&aYa tienes a " + player.getName() + " de amigx."));
+                player.sendMessage(MessageAPI.colorize("&aYa tienes a " + player.getName() + " en tu lista de amigos."));
             } else {
                 player.sendMessage(MessageAPI.colorize("&aHas agregado correctamente a " + player.getName() + " a tu lista de amigos."));
                 playerFriendData.getFollowing().put(target.getUniqueId(), target.getName());

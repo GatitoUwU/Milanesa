@@ -3,7 +3,7 @@ version: '${project.version}'
 main: es.vytale.milanesa.spigot.Milanesa
 authors: [ "change-me-later" ]
 description: Núcleo principal del servidor, versión para Spigot
-website: https://vytale.es
+website: https://github.com/VytaleNW
 
 commands:
   test-redis-latency:

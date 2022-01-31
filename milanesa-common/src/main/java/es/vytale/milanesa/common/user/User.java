@@ -1,5 +1,6 @@
 package es.vytale.milanesa.common.user;
 
+import es.vytale.milanesa.common.friends.FriendProfile;
 import es.vytale.milanesa.common.objects.DatableObject;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +18,7 @@ import java.util.UUID;
 @Setter
 public class User<T> extends DatableObject {
     private T player;
+    private FriendProfile friendProfile;
 
     private boolean friendsLock = false;
 

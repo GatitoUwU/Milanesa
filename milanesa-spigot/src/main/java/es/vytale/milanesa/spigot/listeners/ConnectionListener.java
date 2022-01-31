@@ -1,5 +1,6 @@
 package es.vytale.milanesa.spigot.listeners;
 
+import es.vytale.milanesa.common.friends.FriendProfile;
 import es.vytale.milanesa.common.user.User;
 import es.vytale.milanesa.spigot.Milanesa;
 import es.vytale.milanesa.spigot.utils.MessageAPI;
@@ -21,13 +22,16 @@ import org.bukkit.event.player.PlayerJoinEvent;
  */
 @RequiredArgsConstructor
 public class ConnectionListener implements Listener {
-
     private final Milanesa milanesa;
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onPreConnection(AsyncPlayerPreLoginEvent event) {
         User<Player> user = milanesa.getUserManager().getOrCreate(event.getUniqueId());
         milanesa.getUserDataAccessor().downloadData(user);
+
+        FriendProfile friendProfile = new FriendProfile(user.getUuid());
+        milanesa.getFriendProfileAccessor().downloadData(friendProfile);
+        user.setFriendProfile(friendProfile);
     }
 
     @EventHandler
@@ -41,6 +45,4 @@ public class ConnectionListener implements Listener {
         }
         user.setPlayer(player);
     }
-
-
 }
