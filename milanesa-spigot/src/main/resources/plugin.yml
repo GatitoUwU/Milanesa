@@ -2,6 +2,7 @@ name: Milanesa
 version: '${project.version}'
 main: es.vytale.milanesa.spigot.Milanesa
 authors: [ "change-me-later" ]
+api-version: 1.13
 description: Núcleo principal del servidor, versión para Spigot
 website: https://github.com/VytaleNW
 

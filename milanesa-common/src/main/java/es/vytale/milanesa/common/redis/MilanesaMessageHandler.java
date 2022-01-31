@@ -7,7 +7,9 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
  * This code has been created by
@@ -19,7 +21,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class MilanesaMessageHandler {
     private final RedisHandler redisHandler;
     private final Gson gson;
-    private final Map<String, MilanesaChannel> channels = new ConcurrentHashMap<>();
+    private final Map<String, Set<MilanesaChannel>> channels = new ConcurrentHashMap<>();
     private final String channel;
 
     private Jedis jedis;
@@ -34,11 +36,10 @@ public class MilanesaMessageHandler {
 
     public void handleDeserialization(String data) {
         MilanesaMessage milanesaMessage = gson.fromJson(data, MilanesaMessage.class);
+        Set<MilanesaChannel> milanesaChannels = channels.get(milanesaMessage.getChannel());
 
-        MilanesaChannel milanesaChannel = channels.get(milanesaMessage.getChannel());
-
-        if (milanesaChannel != null) {
-            milanesaChannel.handle(milanesaMessage);
+        if (milanesaChannels != null) {
+            milanesaChannels.forEach(milanesaChannel -> milanesaChannel.handle(milanesaMessage));
         }
     }
 
@@ -57,11 +58,11 @@ public class MilanesaMessageHandler {
     }
 
     public void registerChannel(MilanesaChannel channel) {
-        channels.put(channel.getChannel(), channel);
+        channels.computeIfAbsent(channel.getChannel(), ignored -> new ConcurrentSkipListSet<>()).add(channel);
     }
 
     public void unregisterChannel(MilanesaChannel channel) {
-        channels.remove(channel.getChannel());
+        channels.computeIfAbsent(channel.getChannel(), ignored -> new ConcurrentSkipListSet<>()).remove(channel);
     }
 
     private void registerRedis() {

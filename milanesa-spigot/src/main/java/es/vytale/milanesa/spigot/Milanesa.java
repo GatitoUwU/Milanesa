@@ -8,6 +8,7 @@ import es.vytale.milanesa.common.redis.RedisHandler;
 import es.vytale.milanesa.common.redis.credentials.MilanesaRedisCredentials;
 import es.vytale.milanesa.common.redis.data.MilanesaChannel;
 import es.vytale.milanesa.common.redis.data.MilanesaMessage;
+import es.vytale.milanesa.common.server.ServerRegisterMessage;
 import es.vytale.milanesa.common.storage.MongoHandler;
 import es.vytale.milanesa.common.storage.credentials.MilanesaMongoCredentials;
 import es.vytale.milanesa.common.user.UserDataAccessor;
