@@ -1,5 +1,6 @@
-package es.vytale.milanesa.common.friends.communication;
+package es.vytale.milanesa.common.friends.communication.request;
 
+import es.vytale.milanesa.common.friends.communication.action.FriendPetitionAction;
 import lombok.Data;
 
 import java.util.UUID;
@@ -13,7 +14,9 @@ import java.util.UUID;
  */
 @Data
 public class FriendPetitionRequest {
-    private final UUID holder;
-    private final UUID other;
+    private final UUID holderUuid;
+    private final UUID otherUuid;
+    private final String holderName;
+    private final String otherName;
     private final FriendPetitionAction friendPetitionAction;
 }

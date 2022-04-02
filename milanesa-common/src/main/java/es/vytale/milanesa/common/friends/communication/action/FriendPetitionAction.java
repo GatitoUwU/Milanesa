@@ -1,4 +1,4 @@
-package es.vytale.milanesa.common.friends.communication;
+package es.vytale.milanesa.common.friends.communication.action;
 
 /**
  * This code has been created by
@@ -8,7 +8,7 @@ package es.vytale.milanesa.common.friends.communication;
  * give me the credits. Arigato! n.n
  */
 public enum FriendPetitionAction {
-    ASK, ALREADY_ASKED,
+    ASK,
     ACCEPT,
-    DENY, NOT_TIME
+    DENY;
 }

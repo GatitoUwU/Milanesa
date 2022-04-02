@@ -2,8 +2,8 @@ package es.vytale.milanesa.backend.friends.channel;
 
 import es.vytale.milanesa.backend.friends.FriendsBackend;
 import es.vytale.milanesa.backend.friends.petition.FriendUser;
-import es.vytale.milanesa.common.friends.communication.FriendPetitionAction;
-import es.vytale.milanesa.common.friends.communication.FriendPetitionRequest;
+import es.vytale.milanesa.common.friends.communication.action.FriendPetitionAction;
+import es.vytale.milanesa.common.friends.communication.request.FriendPetitionRequest;
 import es.vytale.milanesa.common.redis.data.MilanesaChannel;
 import es.vytale.milanesa.common.redis.data.MilanesaMessage;
 
