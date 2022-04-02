@@ -9,6 +9,9 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <name>Milanesa Parent</name>
+    <description>Un núcleo para la nueva era de servidores.</description>
+
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
