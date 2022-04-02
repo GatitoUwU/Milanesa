@@ -2,7 +2,7 @@ package es.vytale.milanesa.common.proxy;
 
 import com.google.gson.Gson;
 import es.vytale.milanesa.common.executor.NekoExecutor;
-import es.vytale.milanesa.common.objects.CachedManager;
+import es.vytale.milanesa.common.objects.NormalCachedManager;
 import es.vytale.milanesa.common.proxy.channels.ProxyCommunicationChannel;
 import es.vytale.milanesa.common.proxy.channels.ProxyPlayerUpdateChannel;
 import es.vytale.milanesa.common.proxy.channels.ProxyUpdateReplyChannel;
@@ -20,7 +20,7 @@ import java.util.UUID;
  * give me the credits. Arigato! n.n
  */
 @Getter
-public class ProxyManager extends CachedManager<String, Proxy> {
+public class ProxyManager extends NormalCachedManager<String, Proxy> {
 
     private final Gson gson;
     private final String actualProxy;

@@ -1,7 +1,5 @@
 package es.vytale.milanesa.velocity.listeners;
 
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
@@ -11,12 +9,8 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import es.vytale.milanesa.velocity.Milanesa;
 import lombok.RequiredArgsConstructor;
-import net.elytrium.limboapi.api.event.LoginLimboRegisterEvent;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.format.NamedTextColor;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * This code has been created by
@@ -30,8 +24,6 @@ public class ConnectionListener {
 
     private final Milanesa milanesa;
 
-    private final Cache<Object, Object> pendingConnections = CacheBuilder.newBuilder().expireAfterAccess(30L, TimeUnit.SECONDS).build();
-
     @Subscribe
     public void onConnection(PreLoginEvent event) {
         if (milanesa.getProxyManager().isConnected(event.getUsername())) {
@@ -41,28 +33,13 @@ public class ConnectionListener {
     }
 
     @Subscribe
-    public void onConnection(LoginLimboRegisterEvent event) {
-        Player player = event.getPlayer();
-
-        RegisteredServer balanced = milanesa.getBalancerManager().getDefaultServer();
-        if (balanced != null) {
-            pendingConnections.put(player, balanced);
-        } else {
-            event.addCallback(() -> {
-                milanesa.getLimboManager().connect(player);
-                milanesa.getLimboManager().getQueue().add(player);
-            });
-        }
-    }
-
-    @Subscribe
     public void onAskForServer(PlayerChooseInitialServerEvent event) {
         Player player = event.getPlayer();
 
         try {
-            RegisteredServer registeredServer = (RegisteredServer) pendingConnections.getIfPresent(player);
+            RegisteredServer registeredServer = milanesa.getBalancerManager().getDefaultServer();
             if (registeredServer == null) {
-                throw new RuntimeException("Error while getting pending connection server D:");
+                event.setInitialServer(milanesa.getProxyServer().getServer("limbo").orElse(null));
             } else {
                 event.setInitialServer(registeredServer);
             }

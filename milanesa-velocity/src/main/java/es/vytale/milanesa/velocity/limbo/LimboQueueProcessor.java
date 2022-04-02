@@ -3,10 +3,12 @@ package es.vytale.milanesa.velocity.limbo;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import es.vytale.milanesa.velocity.Milanesa;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -17,11 +19,21 @@ import java.util.concurrent.atomic.AtomicInteger;
  * give me the credits. Arigato! n.n
  */
 @RequiredArgsConstructor
+@Getter
 public class LimboQueueProcessor {
+    private final Queue<Player> queue = new ConcurrentLinkedQueue<>();
+
     private final Milanesa milanesa;
 
     public void process() {
-        Queue<Player> queue = milanesa.getLimboManager().getQueue();
+        try {
+            process0();
+        }catch (Exception e) {
+            milanesa.getLogger().error("Error while ticking", e);
+        }
+    }
+
+    private void process0() {
         AtomicInteger joining = new AtomicInteger(0);
 
         while (true) {

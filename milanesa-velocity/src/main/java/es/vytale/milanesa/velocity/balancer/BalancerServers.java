@@ -28,7 +28,7 @@ public class BalancerServers {
         for (String s : servers) {
             Optional<RegisteredServer> rs = milanesa.getProxyServer().getServer(s);
             rs.ifPresent(this.servers::add);
-            if (rs.isEmpty()) {
+            if (!rs.isPresent()) {
                 milanesa.getLogger().error("Balancer > " + s + " is not a registered server.");
             }
         }

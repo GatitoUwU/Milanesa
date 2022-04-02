@@ -1,6 +1,6 @@
 package es.vytale.milanesa.common.user;
 
-import es.vytale.milanesa.common.objects.CachedManager;
+import es.vytale.milanesa.common.objects.NormalCachedManager;
 
 import java.util.UUID;
 
@@ -11,7 +11,7 @@ import java.util.UUID;
  * don't remove this messages and
  * give me the credits. Arigato! n.n
  */
-public class UserManager<T> extends CachedManager<UUID, User<T>> {
+public class UserManager<T> extends NormalCachedManager<UUID, User<T>> {
     @Override
     public User<T> getOrCreate(UUID uuid) {
         return getValues().computeIfAbsent(uuid, ignored -> new User<>(uuid));

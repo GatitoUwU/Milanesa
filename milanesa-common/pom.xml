@@ -51,7 +51,11 @@
     <artifactId>milanesa-common</artifactId>
     <packaging>jar</packaging>
 
+    <name>Milanesa Common</name>
+
+
     <build>
+        <finalName>milanesa-common</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

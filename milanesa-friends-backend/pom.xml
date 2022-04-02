@@ -13,7 +13,7 @@
     <artifactId>milanesa-friends-backend</artifactId>
     <packaging>jar</packaging>
 
-    <name>backend</name>
+    <name>Milanesa Friends Backend</name>
     <version>1.0-SNAPSHOT</version>
 
     <description>A simple way to manage friends data in big networks.</description>
@@ -56,7 +56,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>es.vytale.milanesa.backend.FriendsBackendBootstrap</mainClass>
+                            <mainClass>es.vytale.milanesa.backend.friends.FriendsBackendBootstrap</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

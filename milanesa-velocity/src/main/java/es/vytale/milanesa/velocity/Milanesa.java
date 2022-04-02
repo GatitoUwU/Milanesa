@@ -7,8 +7,6 @@ import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
-import com.velocitypowered.api.proxy.server.RegisteredServer;
-import com.velocitypowered.api.proxy.server.ServerInfo;
 import es.vytale.milanesa.common.executor.NekoExecutor;
 import es.vytale.milanesa.common.proxy.ProxyManager;
 import es.vytale.milanesa.common.redis.MilanesaMessageHandler;
@@ -16,21 +14,19 @@ import es.vytale.milanesa.common.redis.RedisHandler;
 import es.vytale.milanesa.common.redis.credentials.MilanesaRedisCredentials;
 import es.vytale.milanesa.common.redis.data.MilanesaChannel;
 import es.vytale.milanesa.common.redis.data.MilanesaMessage;
-import es.vytale.milanesa.common.server.ServerRegisterMessage;
-import es.vytale.milanesa.common.server.ServerUnregisterMessage;
 import es.vytale.milanesa.velocity.balancer.BalancerManager;
-import es.vytale.milanesa.velocity.limbo.LimboManager;
+import es.vytale.milanesa.velocity.limbo.LimboQueueProcessor;
 import es.vytale.milanesa.velocity.listeners.ConnectionListener;
 import es.vytale.milanesa.velocity.listeners.PingListener;
+import es.vytale.milanesa.velocity.listeners.ServerRouterListener;
 import es.vytale.milanesa.velocity.server.ServerRegistrar;
 import lombok.Getter;
 import org.slf4j.Logger;
 
 import javax.inject.Inject;
 import java.io.File;
-import java.net.InetSocketAddress;
 import java.nio.file.Path;
-import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Plugin(
         id = "milanesa",
@@ -61,7 +57,7 @@ public class Milanesa {
 
     private ProxyManager proxyManager;
 
-    private LimboManager limboManager;
+    private LimboQueueProcessor limboQueueProcessor;
     private BalancerManager balancerManager;
 
     @Subscribe
@@ -88,17 +84,18 @@ public class Milanesa {
             }
         });
 
-        new ServerRegistrar(gson, proxyServer, milanesaMessageHandler);
+        new ServerRegistrar(this);
 
         proxyManager = new ProxyManager(proxyId, nekoExecutor, milanesaMessageHandler);
 
-        limboManager = new LimboManager(this);
+        limboQueueProcessor = new LimboQueueProcessor(this);
+        proxyServer.getScheduler().buildTask(this, limboQueueProcessor::process).repeat(1L, TimeUnit.SECONDS).schedule();
         balancerManager = new BalancerManager(this);
 
         proxyServer.getEventManager().register(this, new ConnectionListener(this));
         proxyServer.getEventManager().register(this, new PingListener(proxyManager));
+        proxyServer.getEventManager().register(this, new ServerRouterListener(this));
     }
-
 
     public File getFile(String file) {
         return new File(dataFolder.toFile(), file);

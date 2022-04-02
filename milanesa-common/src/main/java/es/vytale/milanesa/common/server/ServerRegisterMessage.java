@@ -12,6 +12,7 @@ import lombok.Data;
 @Data
 public class ServerRegisterMessage {
     private final String server;
+    private final String section;
     private final String address;
     private final int port;
 }

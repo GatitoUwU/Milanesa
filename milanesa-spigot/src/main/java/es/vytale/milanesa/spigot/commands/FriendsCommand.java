@@ -38,11 +38,11 @@ public class FriendsCommand implements CommandExecutor {
 
             if (args.length > 0) {
                 if (args[0].equalsIgnoreCase("list")) {
-                    //handleList(player);
+                    handleList(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("add")) {
-                    //handleAdd(player, args);
+                    handleAdd(player, args);
                     return true;
                 }
             }

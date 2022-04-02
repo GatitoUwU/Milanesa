@@ -6,10 +6,10 @@ import es.vytale.milanesa.common.redis.data.MilanesaMessage;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * This code has been created by
@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentSkipListSet;
 public class MilanesaMessageHandler {
     private final RedisHandler redisHandler;
     private final Gson gson;
-    private final Map<String, Set<MilanesaChannel>> channels = new ConcurrentHashMap<>();
+    private final Map<String, List<MilanesaChannel>> channels = new ConcurrentHashMap<>();
     private final String channel;
 
     private Jedis jedis;
@@ -36,7 +36,7 @@ public class MilanesaMessageHandler {
 
     public void handleDeserialization(String data) {
         MilanesaMessage milanesaMessage = gson.fromJson(data, MilanesaMessage.class);
-        Set<MilanesaChannel> milanesaChannels = channels.get(milanesaMessage.getChannel());
+        List<MilanesaChannel> milanesaChannels = channels.get(milanesaMessage.getChannel());
 
         if (milanesaChannels != null) {
             milanesaChannels.forEach(milanesaChannel -> milanesaChannel.handle(milanesaMessage));
@@ -58,11 +58,11 @@ public class MilanesaMessageHandler {
     }
 
     public void registerChannel(MilanesaChannel channel) {
-        channels.computeIfAbsent(channel.getChannel(), ignored -> new ConcurrentSkipListSet<>()).add(channel);
+        channels.computeIfAbsent(channel.getChannel(), ignored -> new CopyOnWriteArrayList<>()).add(channel);
     }
 
     public void unregisterChannel(MilanesaChannel channel) {
-        channels.computeIfAbsent(channel.getChannel(), ignored -> new ConcurrentSkipListSet<>()).remove(channel);
+        channels.computeIfAbsent(channel.getChannel(), ignored -> new CopyOnWriteArrayList<>()).remove(channel);
     }
 
     private void registerRedis() {

@@ -1,11 +1,7 @@
 package es.vytale.milanesa.common.objects;
 
-import lombok.Getter;
-
 import java.util.Collection;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This code has been created by
@@ -14,21 +10,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * don't remove this messages and
  * give me the credits. Arigato! n.n
  */
-public abstract class CachedManager<K, V> {
-    @Getter
-    private final Map<K, V> values = new ConcurrentHashMap<>();
+public interface CachedManager<K, V> {
+    void invalidate(K k);
+    void put(K k, V v);
 
-    public void invalidate(K k) {
-        values.remove(k);
-    }
-
-    public Optional<V> get(K k) {
-        return Optional.ofNullable(values.get(k));
-    }
-
-    public abstract V getOrCreate(K k);
-
-    public Collection<V> getAll() {
-        return values.values();
-    }
+    Optional<V> get(K k);
+    V getOrCreate(K k);
+    Collection<V> getAll();
 }
