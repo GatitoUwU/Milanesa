@@ -5,9 +5,11 @@ import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
 import com.velocitypowered.api.event.connection.PreLoginEvent;
 import com.velocitypowered.api.event.player.PlayerChooseInitialServerEvent;
+import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import es.vytale.milanesa.velocity.Milanesa;
+import es.vytale.milanesa.velocity.balancer.BalancerServers;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -27,8 +29,9 @@ public class ConnectionListener {
     @Subscribe
     public void onConnection(PreLoginEvent event) {
         if (milanesa.getProxyManager().isConnected(event.getUsername())) {
-            event.setResult(PreLoginEvent.PreLoginComponentResult.denied(Component.text("Esta cuenta ya está dentro del servidor...").color(NamedTextColor.RED)));
-            return;
+            event.setResult(PreLoginEvent.PreLoginComponentResult.denied(Component.text(
+                    "Esta cuenta ya está dentro del servidor..."
+            ).color(NamedTextColor.RED)));
         }
     }
 
@@ -44,17 +47,62 @@ public class ConnectionListener {
                 event.setInitialServer(registeredServer);
             }
         } catch (Exception e) {
-            player.disconnect(Component.text("Error al procesar tu conexión, sí esto sigue ocurriendo, contáctanos en Discord...").color(NamedTextColor.RED));
+            player.disconnect(Component.text(
+                    "Error al procesar tu conexión, sí esto sigue ocurriendo, contáctanos en Discord..."
+            ).color(NamedTextColor.RED));
+        }
+    }
+
+    @Subscribe
+    public void onServerConnection(ServerPreConnectEvent event) {
+        Player player = event.getPlayer();
+
+        RegisteredServer actualServer = event.getOriginalServer();
+        RegisteredServer newServer = event.getResult().getServer().orElse(null);
+
+        String actualServerName = actualServer.getServerInfo().getName();
+        BalancerServers balancerServers = milanesa.getBalancerManager().getServers().get(actualServerName);
+
+        if (newServer != null && balancerServers.getServers().contains(newServer)) {
+            return; // Allow players to move between different lobbies.
+        }
+
+        try {
+            RegisteredServer registeredServer = milanesa.getBalancerManager().getDefaultServer();
+            if (registeredServer == null) {
+                RegisteredServer limbo = milanesa.getProxyServer().getServer("limbo").orElse(null);
+                if (limbo != null) {
+                    event.setResult(ServerPreConnectEvent.ServerResult.allowed(limbo));
+                } else {
+                    event.setResult(ServerPreConnectEvent.ServerResult.denied());
+                }
+            } else {
+                event.setResult(ServerPreConnectEvent.ServerResult.allowed(registeredServer));
+            }
+        } catch (Exception e) {
+            player.disconnect(Component.text(
+                    "Error al procesar tu conexión, sí esto sigue ocurriendo, contáctanos en Discord..."
+            ).color(NamedTextColor.RED));
         }
     }
 
     @Subscribe
     public void onPostConnection(PostLoginEvent event) {
-        milanesa.getNekoExecutor().submit(() -> milanesa.getProxyManager().addPlayer(milanesa.getProxyManager().getSelf(), event.getPlayer().getUsername(), event.getPlayer().getUniqueId()));
+        Player player = event.getPlayer();
+        milanesa.getNekoExecutor().submit(() ->
+                milanesa.getProxyManager().addPlayer(
+                        milanesa.getProxyManager().getSelf(), player.getUsername(), player.getUniqueId()
+                )
+        );
     }
 
     @Subscribe
     public void onDisconnection(DisconnectEvent event) {
-        milanesa.getNekoExecutor().submit(() -> milanesa.getProxyManager().removePlayer(milanesa.getProxyManager().getSelf(), event.getPlayer().getUsername(), event.getPlayer().getUniqueId()));
+        Player player = event.getPlayer();
+        milanesa.getNekoExecutor().submit(() ->
+                milanesa.getProxyManager().removePlayer(
+                        milanesa.getProxyManager().getSelf(), player.getUsername(), player.getUniqueId()
+                )
+        );
     }
 }
