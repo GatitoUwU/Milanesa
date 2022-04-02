@@ -16,7 +16,9 @@ import java.util.UUID;
 public class FriendReply {
     private final UUID holderUuid;
     private final UUID otherUuid;
+
     private final String holderName;
     private final String otherName;
+
     private final FriendReplyAction friendReplyAction;
 }

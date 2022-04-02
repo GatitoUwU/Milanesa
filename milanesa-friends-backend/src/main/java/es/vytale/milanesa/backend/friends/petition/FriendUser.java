@@ -17,8 +17,4 @@ import java.util.concurrent.ConcurrentHashMap;
 public class FriendUser {
     private final UUID uuid;
     private final Set<UUID> asked = ConcurrentHashMap.newKeySet();
-
-    public void remove(FriendPetition friendPetition) {
-        asked.remove(friendPetition.getHolder());
-    }
 }

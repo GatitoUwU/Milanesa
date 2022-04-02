@@ -1,23 +1,11 @@
 package es.vytale.milanesa.spigot.commands;
 
-import es.vytale.milanesa.common.friends.FriendData;
-import es.vytale.milanesa.common.friends.FriendProfile;
-import es.vytale.milanesa.common.friends.FriendProfileAccessor;
-import es.vytale.milanesa.common.user.User;
 import es.vytale.milanesa.spigot.Milanesa;
-import es.vytale.milanesa.spigot.utils.MessageAPI;
 import lombok.RequiredArgsConstructor;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * This code has been created by
@@ -38,18 +26,18 @@ public class FriendsCommand implements CommandExecutor {
 
             if (args.length > 0) {
                 if (args[0].equalsIgnoreCase("list")) {
-                    handleList(player);
+                    //handleList(player);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("add")) {
-                    handleAdd(player, args);
+                    //handleAdd(player, args);
                     return true;
                 }
             }
         }
         return false;
     }
-
+    /*
     public void handleList(Player player) {
         milanesa.getUserManager().get(player.getUniqueId()).ifPresent(user -> {
             if (user.isFriendsLock()) {
@@ -148,5 +136,5 @@ public class FriendsCommand implements CommandExecutor {
             }
             user.setFriendsLock(false);
         });
-    }
+    }*/
 }
